@@ -697,17 +697,14 @@ impl<'a> Parser<'a> {
 
         self.parse_whitespace();
         while let Some(cur_ch) = self.ch {
-            debug!("line:{}, col:{}", self.line, self.col);
             match cur_ch {
                 ';' | '#' => {
                     self.parse_comment();
-                    debug!("parse comment");
                 }
                 '[' => {
                     match self.parse_section() {
                         Ok(sec) => {
                             let msec = &sec[..].trim();
-                            debug!("Got section: {}", msec);
                             cursec = Some(msec.to_string());
                             result.sections.entry(cursec.clone()).or_insert(HashMap::new());
                             self.bump();
@@ -722,7 +719,6 @@ impl<'a> Parser<'a> {
                     match self.parse_val() {
                         Ok(val) => {
                             let mval = val[..].trim().to_owned();
-                            debug!("Got value: {}", mval);
                             let sec = result.sections
                                 .entry(cursec.clone())
                                 .or_insert(HashMap::new());
@@ -736,7 +732,6 @@ impl<'a> Parser<'a> {
                     match self.parse_key() {
                         Ok(key) => {
                             let mkey: String = key[..].trim().to_owned();
-                            debug!("Got key: {}", mkey);
                             curkey = mkey.into();
                         }
                         Err(e) => return Err(e),
